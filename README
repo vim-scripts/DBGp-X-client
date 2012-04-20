@@ -1,0 +1,113 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=4025
+
+This python script provide debugger interface to DBGp protocol, 
+Now support debugging files between two hosts that the path of the project on remote host and local host is different.
+
+The original script was written by Sam Ghods and Seung Woo Shin,
+located at: 
+vimscript #1929
+vimscript #1152
+This is a slightly modified version of that script with a few additional capabilities. 
+
+Requirements) 
+- DBGp protocol enabled debugging module. such as xdebug. 
+  ( I don't know there are free DBGp debugger except xdebug ) 
+- +python2.7 , +sign feature  !
+- this vim script. ( debugger.vim / debugger.py ) 
+
+
+Usage) 
+1. setup xdebug correctly. or other DBGp enabled server, 
+    (with proper remote debug option, etc xdebug.remote_enable = 1) 
+
+2. If you are debugging on two machines, 
+    and the path of your project is different between local host and remote host,
+    you should  add a user mapping for local files to remote files in your vimrc like this:
+
+    let g:debuggerPath = {'sep': ['/', '/'], 'map': [
+                          \['/local/path/to/project1', '/remote/path/to/project/1'],
+                          \['/local/path/to/project2', '/remote/path/to/project/2'],
+                          \['/local/path/to/project3', '/remote/path/to/project/3'],
+                          \]}
+
+    The key "sep" means the path separator of os,
+    On unix and Mac, is "/", On Windows, it is "\".
+    As you can see, the first element in sep list is the local path
+    separator, the second element in sep list is the remote path
+    separator.
+
+3. press <F5> and browse php file within 8 seconds. :-) 
+    (If you are using Xdebug, just add param to the url etc index.php?XDEBUG_SESSION_START=1 )
+
+    If you did setup correctly, server will make connection to vim, 
+    all the windows currently opened will be closed and debugger interface will be shown. 
+
+4. in debuggin mode 
+<F1> : resizing windows 
+<F2> : step into 
+<F3> : step over 
+<F4> : step out 
+<F5> : run to breakpoint
+
+<S-F5> stop debugging
+
+<F10> : shows variable on current cursor 
+<F11> : shows context
+<F12> : shows property on current cursor 
+
+,e : evalute expression and display result. cursor is automatically move to watch window. type line and just press enter. 
+
+command line command) 
+:Bp    : toggle breakpoint on current line 
+:Up    : goto upper level of stack 
+:Dn    : goto lower level of stack 
+
+5. press <S-F5> to stop debugging. 
+
+**This script has only been tested with XDebug for PHP debugging. But it may work with other debuggers.
+
+Okay, forget my poor English...
+============================================================================
+
+这是一个利用 DBGp 协议实现的调试器，
+开发机上需要有python环境，一般linux自带，win下个python2.7安装之～
+同时vim必须要有+python和+sign特性，这个在现有的gvim7.3上应该都支持了。
+
+插件基于DBGp client，主要增改是：
+
+**** 1，增加远程机器调试支持！
+因为远程机器上的项目，文件物理地址一般跟开发机器不同，需要做路径映射，
+这个使用过其它 IDE(比如netbeans) 做调试的同学应该很清楚，
+比如服务器上的文件 /var/www/index.php，
+在你的开发机器上这个文件可能位于 /home/me/develop/index.php
+那你就必须将 /home/me/develop/ 映射到 /var/www/，
+可用的配置项是：
+
+    let g:debuggerPath = {'sep': ['/', '/'], 'map': [
+            \['/home/me/develop/', '/var/www/'],
+            \]}
+
+        其中，sep对应的列表项第一项是你开发机的目录分隔符，第二项是服务器的，
+        在linux和mac上是 /，而在windows上是 \，注意：是单一字符，反斜杠不要写两遍！用单引号括起来。
+
+        同时，map对应的列表项则是每一项 开发机路径，服务器路径 的映射，记住路径最后要以分割符结尾。
+
+
+**** 2，增加一键获取当前位置变量值的功能(默认快捷键 F10 )
+DBGp本身有property_get方法可以获取格式化很漂亮的变量值，但有时候不可用！！
+新增的这个一键获取当前位置变量值的功能和netbeans调试器的功能一致，都是利用 eval $var 实现，
+在property_get不可用的情况下可使用该方法替代它！
+远程调试的过程中property_get经常是不可用的，一般只在第一个堆栈有效，
+但是服务器和开发机同一台机时，几乎没有什么问题！？
+希望哪位同学知道为什么的能告知我一声。。。
+
+
+**** 3，移除mksession相关实现
+这个实现导致插件在不同平台上可用性下降（需要写磁盘文件），
+而且本身在Vim里的特性支持也并不稳定，故移除之！
+
+
+**** 4，重定义部分快捷键
+
+
+**** 5，总的来说，就是这样了。
