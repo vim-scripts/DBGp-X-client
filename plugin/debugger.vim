@@ -26,8 +26,8 @@
 " Name Of File: debugger.vim, debugger.py
 "  Description: remote debugger interface to DBGp protocol
 "   Maintainer: Chivan <isokay <at> gmail.com>
-"  Last Change: April 20, 2012
-"      Version: 2.0.1
+"  Last Change: April 24, 2012
+"      Version: 2.0.2
 "               Originally written by Sam Ghods <sam <at> box.net> and Seung Woo Shin <segv <at> sayclub.com>
 "               The original script is located at:
 "               http://www.vim.org/scripts/script.php?script_id=1929
@@ -99,7 +99,8 @@
 "
 "                 let g:debuggerMiniBufExpl = 1
 "
-"      History: 2.0.1 o Added the path mapping feature and some other
+"      History: 2.0.2 o Added auto detect if using the Mini Buffer Explorer vim plugin
+"               2.0.1 o Added the path mapping feature and some other
 "                     changes.
 "               1.1.1 o Added a check so the script doesn't load if python is
 "                     not compiled in. (Contributed by Lars Becker.)

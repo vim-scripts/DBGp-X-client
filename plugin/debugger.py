@@ -446,7 +446,7 @@ class DebugUI:
     if self.mode == 1: # is debug mode ?
       return
     self.mode = 1
-    if self.minibufexpl == 1:
+    if self.minibufexpl == 1 and int(vim.eval('exists(":CMiniBufExplorer")')) == 2:
       vim.command('CMiniBufExplorer')         # close minibufexplorer if it is open
     for i in range(1, len(vim.windows)+1):
       vim.command(str(i)+'wincmd w')
@@ -480,7 +480,7 @@ class DebugUI:
     self.mode    = 0
     self.cursign = None
 
-    if self.minibufexpl == 1:
+    if self.minibufexpl == 1 and int(vim.eval('exists(":MiniBufExplorer")')) == 2:
       vim.command('MiniBufExplorer')         # close minibufexplorer if it is open
 
   def create(self):
